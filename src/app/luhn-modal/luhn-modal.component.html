@@ -1,0 +1,67 @@
+<h2 mat-dialog-title>Candidate Details</h2>
+<mat-dialog-content class="mat-typography">
+	<form class="luhn-form" [formGroup]="profileForm">
+		<mat-form-field class="margin-10" appearance="fill">
+		    <mat-label>First Name</mat-label>
+		    <input matInput [(ngModel)]="first_name">
+		</mat-form-field>
+		<mat-form-field class="margin-10" appearance="fill">
+		    <mat-label>Last Name</mat-label>
+		    <input matInput [(ngModel)]="last_name">
+	    </mat-form-field>
+	    <br>
+	    <div class="email-phone-group">
+			<mat-form-field class="margin-10" appearance="fill">
+			    <mat-label>Email Address</mat-label>
+			    <input type="email" matInput [(ngModel)]="email" [formControl]="emailFormControl" [errorStateMatcher]="emailErrorMatcher" placeholder="Ex. pat@example.com">
+			    <mat-hint>Errors appear instantly!</mat-hint>
+			    <mat-error *ngIf="emailFormControl.hasError('email') && !emailFormControl.hasError('required')">
+			      Please enter a valid email address
+			    </mat-error>
+			    <mat-error *ngIf="emailFormControl.hasError('required')">
+			      Email is <strong>required</strong>
+			    </mat-error>
+			</mat-form-field>
+	    	<div formGroupName="phone" class="margin-10">
+		        <mat-form-field appearance="standard" class="phone_country">
+		            <mat-label>Country</mat-label>
+		            <mat-select formControlName="country" (selectionChange)="formatNumber()">
+		                <mat-option *ngFor="let countryCode of countyCodes" [value]="countryCode.code">
+		                    {{countryCode.country}}
+		                </mat-option>
+		            </mat-select>
+		        </mat-form-field>
+		        <mat-form-field appearance="standard" class="phone_number">
+		            <mat-label>Phone Number</mat-label>
+		            <input formControlName="number"
+		                   type="tel"
+		                   placeholder="Telephone"
+		                   (input)="formatNumber()"
+		                   [errorStateMatcher]="phoneErrorMatcher"
+		                   matInput>
+		            <mat-error *ngIf="!phoneGroup.valid">
+		                Valid Phone Number: {{phoneHint}}
+		            </mat-error>
+		            <mat-hint>{{phoneHint}}</mat-hint>
+		        </mat-form-field>
+		    </div>
+	    </div>
+		<mat-form-field class="margin-10 luhn-full-width" appearance="fill">
+		    <mat-label>South African Identity Number</mat-label>
+		    <input matInput [(ngModel)]="identi_number" [formControl]="identiFormControl" [errorStateMatcher]="identiErrorMatcher">
+		    <mat-error *ngIf="identiFormControl.hasError('identi') && !identiFormControl.hasError('required')">
+	      		Please enter a valid Card Number
+            </mat-error>
+	    </mat-form-field>
+
+		<mat-form-field class="margin-10 luhn-full-width" appearance="fill">
+		    <mat-label>Physical Address</mat-label>
+		    <input matInput ngx-google-places-autocomplete (onAddressChange)="handleAddressChange($event)" />
+		    <!-- <input matInput [(ngModel)]="physical_address"> -->
+		</mat-form-field>
+	</form>
+</mat-dialog-content>
+<mat-dialog-actions align="end">
+  <button mat-stroked-button mat-dialog-close color="primary">Cancel</button>
+  <button mat-raised-button [mat-dialog-close]="true" color="primary" cdkFocusInitial>Save</button>
+</mat-dialog-actions>
